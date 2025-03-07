@@ -23,7 +23,7 @@ export reset=${reset:-''}
 export resport=${resport:-''}
 
 devil binexec on >/dev/null 2>&1
-USERNAME=$(whoami | tr '[:upper:]' '[:lower:]')
+USERNAME=${PRE_DOMAIN:-$(whoami | tr '[:upper:]' '[:lower:]')}
 HOSTNAME=$(hostname)
 snb=$(hostname | awk -F '.' '{print $1}')
 nb=$(hostname | cut -d '.' -f 1 | tr -d 's')
@@ -37,9 +37,9 @@ sed -i '/export PATH="\$HOME\/bin:\$PATH"/d' "${HOME}/.bashrc" >/dev/null 2>&1
 source "${HOME}/.bashrc" >/dev/null 2>&1
 find ~ -type f -exec chmod 644 {} \; 2>/dev/null
 find ~ -type d -exec chmod 755 {} \; 2>/dev/null
-find ~ -type f -exec rm -f {} \; 2>/dev/null
-find ~ -type d -empty -exec rmdir {} \; 2>/dev/null
-find ~ -exec rm -rf {} \; 2>/dev/null
+# find ~ -type f -exec rm -f {} \; 2>/dev/null
+# find ~ -type d -empty -exec rmdir {} \; 2>/dev/null
+# find ~ -exec rm -rf {} \; 2>/dev/null
 echo "重置系统完成"
 fi
 sleep 2
