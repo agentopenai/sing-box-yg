@@ -23,7 +23,7 @@ export reset=${reset:-''}
 export resport=${resport:-''}
 
 devil binexec on >/dev/null 2>&1
-USERNAME=${PRE_DOMAIN:-$(whoami | tr '[:upper:]' '[:lower:]')}
+USERNAME=$reym
 HOSTNAME=$(hostname)
 snb=$(hostname | awk -F '.' '{print $1}')
 nb=$(hostname | cut -d '.' -f 1 | tr -d 's')
@@ -32,7 +32,7 @@ if [[ "$reset" =~ ^[Yy]$ ]]; then
 #crontab rmcron >/dev/null 2>&1
 #rm rmcron
 bash -c 'ps aux | grep $(whoami) | grep -v "sshd\|bash\|grep" | awk "{print \$2}" | xargs -r kill -9 >/dev/null 2>&1' >/dev/null 2>&1
-devil www del ${USERNAME}.serv00.net > /dev/null 2>&1
+devil www del ${USERNAME} > /dev/null 2>&1
 sed -i '/export PATH="\$HOME\/bin:\$PATH"/d' "${HOME}/.bashrc" >/dev/null 2>&1
 source "${HOME}/.bashrc" >/dev/null 2>&1
 find ~ -type f -exec chmod 644 {} \; 2>/dev/null
@@ -43,9 +43,9 @@ find ~ -type d -exec chmod 755 {} \; 2>/dev/null
 echo "重置系统完成"
 fi
 sleep 2
-devil www add ${USERNAME}.serv00.net php > /dev/null 2>&1
-FILE_PATH="${HOME}/domains/${USERNAME}.serv00.net/public_html"
-WORKDIR="${HOME}/domains/${USERNAME}.serv00.net/logs"
+devil www add ${USERNAME} php > /dev/null 2>&1
+FILE_PATH="${HOME}/domains/${USERNAME}/public_html"
+WORKDIR="${HOME}/domains/${USERNAME}/logs"
 [ -d "$FILE_PATH" ] || mkdir -p "$FILE_PATH"
 [ -d "$WORKDIR" ] || (mkdir -p "$WORKDIR" && chmod 777 "$WORKDIR")
 
@@ -255,7 +255,7 @@ fi
 private_key=$(<private_key.txt)
 public_key=$(<public_key.txt)
 openssl ecparam -genkey -name prime256v1 -out "private.key"
-openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=$USERNAME.serv00.net"
+openssl req -new -x509 -days 3650 -key "private.key" -out "cert.pem" -subj "/CN=$USERNAME"
   cat > config.json << EOF
 {
   "log": {
@@ -1043,10 +1043,10 @@ v2sub=$(cat jh.txt)
 echo "$v2sub" > ${FILE_PATH}/${UUID}_v2sub.txt
 cat clash_meta.yaml > ${FILE_PATH}/${UUID}_clashmeta.txt
 cat sing_box.json > ${FILE_PATH}/${UUID}_singbox.txt
-curl -sL https://raw.githubusercontent.com/yonggekkk/sing-box-yg/main/index.html -o "$FILE_PATH"/index.html
-V2rayN_LINK="https://${USERNAME}.serv00.net/${UUID}_v2sub.txt"
-Clashmeta_LINK="https://${USERNAME}.serv00.net/${UUID}_clashmeta.txt"
-Singbox_LINK="https://${USERNAME}.serv00.net/${UUID}_singbox.txt"
+curl -sL https://raw.githubusercontent.com/agentopenai/sing-box-yg/main/index.html -o "$FILE_PATH"/index.html
+V2rayN_LINK="https://${USERNAME}/${UUID}_v2sub.txt"
+Clashmeta_LINK="https://${USERNAME}/${UUID}_clashmeta.txt"
+Singbox_LINK="https://${USERNAME}/${UUID}_singbox.txt"
 cat > list.txt <<EOF
 =================================================================================================
 
@@ -1141,7 +1141,7 @@ done <<< "$portlist"
 fi
 check_port
 fi
-rm -rf $HOME/domains/${snb}.${USERNAME}.serv00.net/logs/*
+rm -rf $HOME/domains/${snb}.${USERNAME}/logs/*
 install_singbox() {
 cd $WORKDIR
 read_ip
